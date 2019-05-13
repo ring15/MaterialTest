@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Snackbar不是用来代替toast的，他们有不同的应用场景，Snackbar主要有一个交互功能
                 Snackbar.make(v, "data delete", Snackbar.LENGTH_SHORT)
                         .setAction("undo", new View.OnClickListener() {
                             @Override

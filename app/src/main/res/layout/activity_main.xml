@@ -7,10 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!--DrawerLayout中要包含一个framelayout，framelayout中的代码是在主界面显示的-->
+    <!--framelayout外部代码是在侧滑中显示的-->
+    <!--CoordinatorLayout是一个加强版的framelayout-->
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--CoordinatorLayout是加强版的framelayout，所以子类位置会重叠，加APPbarlayout会防止覆盖-->
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,6 +28,10 @@
                 app:contentInsetEnd="0dp"
                 app:contentInsetStart="0dp"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
+                <!--layout_scrollFlags指定滑动时的属性，scroll表示recyclerview向上滚动时，-->
+                <!--toolbar会跟着一起向上滚动并实现隐藏，enterAlways表示，代表当recyclerview-->
+                <!--向下滚动时，toolbar会跟着一起向上滚动，并重新显示，snap表示，当toolbar-->
+                <!--还没有完全隐藏或显示的时候，会根据当前滚动的距离，自动选择是隐藏还是显示-->
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -52,12 +60,14 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <!--只加AppBarLayout还不够，还要给toolbar外部的东西指定一个布局行为-->
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <!--为了实现卡片式布局-->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_cardview"
                 android:layout_width="match_parent"
@@ -65,6 +75,7 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
+        <!--直接用FloatingActionButton会被Snackbar遮挡，所以，把framelayout换成CoordinatorLayout-->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -89,6 +100,7 @@
 
     <!--</LinearLayout>-->
 
+    <!--先自定义headerLayout和menu，然后直接调用就可以了-->
     <android.support.design.widget.NavigationView
         android:id="@+id/navigationview"
         android:layout_width="match_parent"
