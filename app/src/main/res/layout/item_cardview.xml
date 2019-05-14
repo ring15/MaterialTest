@@ -8,6 +8,7 @@
     <!--圆角-->
 
     <RelativeLayout
+        android:background="@drawable/ripple_mask"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
