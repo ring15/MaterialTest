@@ -21,6 +21,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,10 +55,17 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("action1");
         mManager.registerReceiver(mReceive, intentFilter);
 //        UIUtils.fullScreen(this);
+        EventBus.getDefault().register(this);
+        EventBus.getDefault().post(new TestBean("post"));
         init();
     }
 
     private void init() {
+        SureEvent event = EventBus.getDefault().getStickyEvent(SureEvent.class);
+        if (event != null) {
+            mTitle.setText(event.isSure() ? "y" : "n");
+            EventBus.getDefault().removeStickyEvent(event);
+        }
         mAdapter = new MyAdapter(this);
         RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
         mView.setLayoutManager(manager);
@@ -132,11 +143,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static class Receive extends BroadcastReceiver{
+    private static class Receive extends BroadcastReceiver {
 
         private WeakReference<MainActivity> mReference;
 
-        public Receive(MainActivity activity){
+        public Receive(MainActivity activity) {
             mReference = new WeakReference<>(activity);
         }
 
@@ -144,5 +155,26 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             mReference.get().mTitle.setText("change");
         }
+    }
+
+
+    //主线程
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onRefresh(SureEvent event) {
+        mTitle.setText("change");
+    }
+
+
+    //主线程
+    @Subscribe(threadMode = ThreadMode.POSTING, priority = 2)
+    public void onRefreshT(SureEvent event) {
+        mTitle.setText("false");
+        EventBus.getDefault().cancelEventDelivery(event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
